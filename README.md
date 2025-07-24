@@ -2,23 +2,24 @@
 
 This package provides a ros2_control hardware interface for simulating OpenArm using the MuJoCo physics engine in place of physical hardware. It connects to a WebAssembly instance of MuJoCo through WebSockets.
 
+# Prerequisites
+
+- [ROS2](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html) (tested with Humble)
+- [openarm_description](https://github.com/enactic/openarm_description)
+- [openarm_ros2](https://github.com/enactic/openarm_ros2)
+
 ## Usage
 
-Certain OpenArm packages have been configured to use this interface by specifying the `hardware_type` flag.
-This flag defaults to `real`, which assumes the use of physical hardware.
-Setting the flag to `mock` uses an interface that writes commands to states directly (with some delays).
-Setting the flag to `sim` uses the MuJoCo hardware interface.
+https://github.com/user-attachments/assets/a8e2d23b-b206-4966-91c6-e72fa95b18c1
 
-For example, to use MoveIt2 with simulated bimanual hardware, first run MuJoCo by visiting:
+To use MoveIt2 with simulated bimanual hardware, first run MuJoCo by visiting:
 
 [github.com/thomasonzhou/mujoco_anywhere](https://github.com/thomasonzhou/mujoco_anywhere)
 
-Then run the original command with the `hardware_type` flag:
+Then run the original command with the `use_fake_hardware` and `use_sim_hardware` flags:
 ```sh
-ros2 launch -d openarm_bimanual_moveit_config demo.launch.py hardware_type:=sim
+ros2 launch -d openarm_bimanual_moveit_config demo.launch.py use_fake_hardware:=true use_sim_hardware:=true
 ```
-
-*It may be necessary to install the nlohmann-json-dev library before building*
 
 Please note that running multiple instances of the website will cause conflicting signals. Future configurations will allow for multiple instances to run simultaneously.
 
