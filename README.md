@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/a8e2d23b-b206-4966-91c6-e72fa95b18c1
 
 To use MoveIt2 with simulated bimanual hardware, first run MuJoCo by visiting:
 
-[github.com/thomasonzhou/mujoco_anywhere](https://github.com/thomasonzhou/mujoco_anywhere)
+(thomasonzhou.github.io/mujoco_anywhere)[https://thomasonzhou.github.io/mujoco_anywhere/]
 
 Then run the original command with the `use_fake_hardware` and `use_sim_hardware` flags:
 ```sh
