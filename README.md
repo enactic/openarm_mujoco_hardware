@@ -14,11 +14,11 @@ https://github.com/user-attachments/assets/a8e2d23b-b206-4966-91c6-e72fa95b18c1
 
 To use MoveIt2 with simulated bimanual hardware, first run MuJoCo by visiting:
 
-(thomasonzhou.github.io/mujoco_anywhere)[https://thomasonzhou.github.io/mujoco_anywhere/]
+[thomasonzhou.github.io/mujoco_anywhere](https://thomasonzhou.github.io/mujoco_anywhere/)
 
 Then run the original command with the `use_fake_hardware` and `use_sim_hardware` flags:
 ```sh
-ros2 launch -d openarm_bimanual_moveit_config demo.launch.py use_fake_hardware:=true use_sim_hardware:=true
+ros2 launch openarm_bimanual_moveit_config demo.launch.py use_fake_hardware:=true use_sim_hardware:=true
 ```
 
 Please note that running multiple instances of the website will cause conflicting signals. Future configurations will allow for multiple instances to run simultaneously.
