@@ -34,7 +34,7 @@ The hardware plugin is specified in `openarm_description/urdf/ros2_control/opena
   <hardware>
     <plugin>openarm_mujoco_hardware/MujocoHardware</plugin>
     <param name="prefix">left_</param>
-    <param name="websocket_port">1337</param>
+    <param name="websocket_port">1338</param>
   </hardware>
   <!-- Joint configurations -->
 </ros2_control>
@@ -50,7 +50,7 @@ Configuration example in `urdf/ros2_control/openarm.bimanual.ros2_control.xacro`
   <hardware>
     <plugin>openarm_mujoco_hardware/MujocoHardware</plugin>
     <param name="prefix">left_</param>
-    <param name="websocket_port">1337</param>
+    <param name="websocket_port">1338</param>
   </hardware>
   <!-- Joint configurations -->
 </ros2_control>
@@ -60,7 +60,7 @@ Configuration example in `urdf/ros2_control/openarm.bimanual.ros2_control.xacro`
   <hardware>
     <plugin>openarm_mujoco_hardware/MujocoHardware</plugin>
     <param name="prefix">right_</param>
-    <param name="websocket_port">1338</param>
+    <param name="websocket_port">1337</param>
   </hardware>
   <!-- Joint configurations -->
 </ros2_control>
