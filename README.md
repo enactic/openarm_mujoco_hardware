@@ -27,17 +27,41 @@ Please note that running multiple instances of the website will cause conflictin
 
 ### Hardware Plugin Config
 
-The hardware plugin is specified in `openarm_description/openarm.ros2_control.xacro` as follows:
+The hardware plugin is specified in `openarm_description/urdf/ros2_control/openarm.ros2_control.xacro` as follows:
 
 ```xml
-<ros2_control name="openarm_system" type="system">
+<ros2_control name="openarm_hardware_interface" type="system">
   <hardware>
     <plugin>openarm_mujoco_hardware/MujocoHardware</plugin>
     <param name="prefix">left_</param>
-    <param name="websocket_port">1337</param>
+    <param name="websocket_port">1338</param>
   </hardware>
   <!-- Joint configurations -->
 </ros2_control>
 ```
 
 When using OpenArm in a bimanual configuration, the WebSocket ports default to 1337 for right arm and 1338 for left arm commands. However, in practice commands can be sent and states can be received through any connected port.
+
+Configuration example in `urdf/ros2_control/openarm.bimanual.ros2_control.xacro`:
+
+```xml
+<!-- Left Arm Hardware Interface -->
+<ros2_control name="openarm_left_hardware_interface" type="system">
+  <hardware>
+    <plugin>openarm_mujoco_hardware/MujocoHardware</plugin>
+    <param name="prefix">left_</param>
+    <param name="websocket_port">1338</param>
+  </hardware>
+  <!-- Joint configurations -->
+</ros2_control>
+
+<!-- Right Arm Hardware Interface -->
+<ros2_control name="openarm_right_hardware_interface" type="system">
+  <hardware>
+    <plugin>openarm_mujoco_hardware/MujocoHardware</plugin>
+    <param name="prefix">right_</param>
+    <param name="websocket_port">1337</param>
+  </hardware>
+  <!-- Joint configurations -->
+</ros2_control>
+```
