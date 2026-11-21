@@ -17,6 +17,7 @@
 #include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
+#include <condition_variable>
 #include <deque>
 #include <iostream>
 #include <mutex>
@@ -32,32 +33,33 @@ class WebSocketSession;
 class MujocoHardware : public hardware_interface::SystemInterface {
  public:
   MujocoHardware() = default;
+  ~MujocoHardware() override;
 
   hardware_interface::CallbackReturn on_init(
-      const hardware_interface::HardwareInfo& info) override;
+      const hardware_interface::HardwareInfo &info) override;
   hardware_interface::CallbackReturn on_configure(
-      const rclcpp_lifecycle::State& /*previous_state*/) override;
+      const rclcpp_lifecycle::State & /*previous_state*/) override;
   hardware_interface::CallbackReturn on_cleanup(
-      const rclcpp_lifecycle::State& /*previous_state*/) override;
+      const rclcpp_lifecycle::State & /*previous_state*/) override;
   hardware_interface::CallbackReturn on_shutdown(
-      const rclcpp_lifecycle::State& /*previous_state*/) override;
+      const rclcpp_lifecycle::State & /*previous_state*/) override;
   hardware_interface::CallbackReturn on_activate(
-      const rclcpp_lifecycle::State& /*previous_state*/) override;
+      const rclcpp_lifecycle::State & /*previous_state*/) override;
   hardware_interface::CallbackReturn on_deactivate(
-      const rclcpp_lifecycle::State& /*previous_state*/) override;
+      const rclcpp_lifecycle::State & /*previous_state*/) override;
   hardware_interface::CallbackReturn on_error(
-      const rclcpp_lifecycle::State& /*previous_state*/) override;
+      const rclcpp_lifecycle::State & /*previous_state*/) override;
 
   std::vector<hardware_interface::StateInterface> export_state_interfaces()
       override;
   std::vector<hardware_interface::CommandInterface> export_command_interfaces()
       override;
   hardware_interface::return_type read(
-      const rclcpp::Time& /*time*/,
-      const rclcpp::Duration& /*period*/) override;
+      const rclcpp::Time & /*time*/,
+      const rclcpp::Duration & /*period*/) override;
   hardware_interface::return_type write(
-      const rclcpp::Time& /*time*/,
-      const rclcpp::Duration& /*period*/) override;
+      const rclcpp::Time & /*time*/,
+      const rclcpp::Duration & /*period*/) override;
 
   friend class WebSocketSession;
 
@@ -79,8 +81,20 @@ class MujocoHardware : public hardware_interface::SystemInterface {
   std::vector<double> cmd_qtau_ff_;
 
   std::mutex state_mutex_;
+  std::vector<double> received_pos_, received_vel_, received_tau_;
+  bool state_received_ = false;
+  bool commands_initialized_ = false;
+  std::chrono::steady_clock::time_point state_time_;
+  std::string command_interface_ = "effort";
+  double state_timeout_ = 1.0;
+  bool wait_for_state_ = false;
+  double connection_timeout_ = 60.0;
+  std::condition_variable state_cv_;
+  std::mutex session_mutex_;
 
   void clear_cmd_torque();
+  void send_json(const nlohmann::json &message);
+  void stop();
 
   // websocket connection to mujoco
   boost::asio::ip::tcp::endpoint endpoint_;
@@ -101,11 +115,11 @@ class MujocoHardware : public hardware_interface::SystemInterface {
 class WebSocketSession : public std::enable_shared_from_this<WebSocketSession> {
  public:
   static std::shared_ptr<WebSocketSession> create(
-      boost::asio::ip::tcp::socket socket, MujocoHardware* hw);
+      boost::asio::ip::tcp::socket socket, MujocoHardware *hw);
   void run();
-  WebSocketSession(boost::asio::ip::tcp::socket socket, MujocoHardware* hw);
+  WebSocketSession(boost::asio::ip::tcp::socket socket, MujocoHardware *hw);
 
-  void send_json(const nlohmann::json& j);
+  void send_json(const nlohmann::json &j);
 
  private:
   void flush();
@@ -116,7 +130,7 @@ class WebSocketSession : public std::enable_shared_from_this<WebSocketSession> {
 
   boost::beast::websocket::stream<boost::asio::ip::tcp::socket> ws_;
   boost::beast::flat_buffer buffer_;
-  MujocoHardware* hw_;
+  MujocoHardware *hw_;
   std::deque<std::shared_ptr<std::string>> send_queue_;
   bool write_in_progress_;
 };
