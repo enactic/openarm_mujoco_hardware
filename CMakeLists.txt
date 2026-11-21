@@ -58,6 +58,7 @@ install(
 install(DIRECTORY include/
 DESTINATION include
 )
+install(PROGRAMS scripts/activate_when_connected.py DESTINATION lib/${PROJECT_NAME})
 
 
 if(BUILD_TESTING)
